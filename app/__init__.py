@@ -1,0 +1,2 @@
+"""Ticket Assistant application package."""
+
