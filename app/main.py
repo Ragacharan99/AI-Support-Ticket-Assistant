@@ -1,6 +1,7 @@
 """FastAPI application and ticket endpoints."""
 
 from datetime import datetime
+from statistics import median
 
 from fastapi import Depends, FastAPI, HTTPException, Query, status
 from sqlalchemy import case, select
@@ -15,6 +16,16 @@ Base.metadata.create_all(bind=engine)
 upgrade_sqlite_schema()
 
 app = FastAPI(title="Ticket Assistant API", version="0.1.0")
+
+
+def _duration_summary(durations: list[float]) -> dict[str, float | None]:
+    """Return rounded aggregate timings, or nulls when no complete timings exist."""
+    if not durations:
+        return {"avg_seconds": None, "median_seconds": None}
+    return {
+        "avg_seconds": round(sum(durations) / len(durations), 2),
+        "median_seconds": round(median(durations), 2),
+    }
 
 
 @app.post("/tickets", response_model=TicketRead, status_code=status.HTTP_201_CREATED)
@@ -55,6 +66,65 @@ def review_queue(db: Session = Depends(get_db)) -> list[Ticket]:
         .order_by(urgency_priority, Ticket.created_at.asc())
     )
     return list(db.scalars(query))
+
+
+@app.get("/metrics")
+def get_metrics(db: Session = Depends(get_db)) -> dict:
+    """Summarize ticket workflow volume, AI agreement, and reviewed-ticket timings."""
+    tickets = list(db.scalars(select(Ticket)))
+    status_counts = {ticket_status.value: 0 for ticket_status in TicketStatus}
+    for ticket in tickets:
+        status_counts[ticket.status.value] += 1
+
+    reviewed_tickets = [ticket for ticket in tickets if ticket.status == TicketStatus.reviewed]
+    reviewed_count = len(reviewed_tickets)
+    action_counts = {action.value: 0 for action in ReviewAction}
+    for ticket in reviewed_tickets:
+        if ticket.review_action is not None:
+            action_counts[ticket.review_action.value] += 1
+
+    category_agreements = sum(
+        ticket.category is not None
+        and ticket.ai_category is not None
+        and ticket.category == ticket.ai_category
+        for ticket in reviewed_tickets
+    )
+    urgency_agreements = sum(
+        ticket.urgency is not None
+        and ticket.ai_urgency is not None
+        and ticket.urgency == ticket.ai_urgency
+        for ticket in reviewed_tickets
+    )
+    time_to_resolution = [
+        (ticket.reviewed_at - ticket.created_at).total_seconds()
+        for ticket in reviewed_tickets
+        if ticket.reviewed_at is not None and ticket.created_at is not None
+    ]
+    human_review_time = [
+        (ticket.reviewed_at - ticket.analyzed_at).total_seconds()
+        for ticket in reviewed_tickets
+        if ticket.reviewed_at is not None and ticket.analyzed_at is not None
+    ]
+    percentage = lambda count, total: round((count / total * 100) if total else 0.0, 2)
+
+    return {
+        "counts": {"total": len(tickets), "by_status": status_counts},
+        "review_actions": {
+            action.value: {
+                "count": action_counts[action.value],
+                "percentage": percentage(action_counts[action.value], reviewed_count),
+            }
+            for action in ReviewAction
+        },
+        "ai_agreement": {
+            "category_percentage": percentage(category_agreements, reviewed_count),
+            "urgency_percentage": percentage(urgency_agreements, reviewed_count),
+        },
+        "timing": {
+            "time_to_resolution": _duration_summary(time_to_resolution),
+            "human_review_time": _duration_summary(human_review_time),
+        },
+    }
 
 
 @app.get("/tickets/{ticket_id}", response_model=TicketRead)
