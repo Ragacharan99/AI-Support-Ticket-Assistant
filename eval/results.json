@@ -1,0 +1,339 @@
+{
+  "metrics": {
+    "completed": 30,
+    "category_accuracy": 80.0,
+    "urgency_exact_match_accuracy": 70.0,
+    "urgency_within_one_level_accuracy": 96.67,
+    "failure_count": 1,
+    "per_category": {
+      "account": {
+        "total": 6,
+        "correct": 5,
+        "accuracy": 83.33
+      },
+      "billing": {
+        "total": 6,
+        "correct": 5,
+        "accuracy": 83.33
+      },
+      "feature_request": {
+        "total": 6,
+        "correct": 6,
+        "accuracy": 100.0
+      },
+      "other": {
+        "total": 6,
+        "correct": 3,
+        "accuracy": 50.0
+      },
+      "technical": {
+        "total": 6,
+        "correct": 5,
+        "accuracy": 83.33
+      }
+    }
+  },
+  "results": [
+    {
+      "id": 1,
+      "expected_category": "billing",
+      "expected_urgency": "high",
+      "got_category": null,
+      "got_urgency": null,
+      "category_correct": false,
+      "urgency_correct": false,
+      "urgency_within_one": false,
+      "error": "AI provider request failed: Request timed out."
+    },
+    {
+      "id": 2,
+      "expected_category": "billing",
+      "expected_urgency": "low",
+      "got_category": "billing",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 3,
+      "expected_category": "billing",
+      "expected_urgency": "high",
+      "got_category": "billing",
+      "got_urgency": "high",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 4,
+      "expected_category": "billing",
+      "expected_urgency": "low",
+      "got_category": "billing",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 5,
+      "expected_category": "billing",
+      "expected_urgency": "medium",
+      "got_category": "billing",
+      "got_urgency": "high",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 6,
+      "expected_category": "technical",
+      "expected_urgency": "critical",
+      "got_category": "technical",
+      "got_urgency": "critical",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 7,
+      "expected_category": "technical",
+      "expected_urgency": "medium",
+      "got_category": "technical",
+      "got_urgency": "medium",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 8,
+      "expected_category": "technical",
+      "expected_urgency": "high",
+      "got_category": "technical",
+      "got_urgency": "medium",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 9,
+      "expected_category": "technical",
+      "expected_urgency": "medium",
+      "got_category": "technical",
+      "got_urgency": "medium",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 10,
+      "expected_category": "technical",
+      "expected_urgency": "low",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": false,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 11,
+      "expected_category": "account",
+      "expected_urgency": "high",
+      "got_category": "account",
+      "got_urgency": "high",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 12,
+      "expected_category": "account",
+      "expected_urgency": "critical",
+      "got_category": "account",
+      "got_urgency": "critical",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 13,
+      "expected_category": "account",
+      "expected_urgency": "low",
+      "got_category": "account",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 14,
+      "expected_category": "account",
+      "expected_urgency": "medium",
+      "got_category": "technical",
+      "got_urgency": "medium",
+      "category_correct": false,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 15,
+      "expected_category": "account",
+      "expected_urgency": "low",
+      "got_category": "account",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 16,
+      "expected_category": "feature_request",
+      "expected_urgency": "medium",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 17,
+      "expected_category": "feature_request",
+      "expected_urgency": "low",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 18,
+      "expected_category": "feature_request",
+      "expected_urgency": "medium",
+      "got_category": "feature_request",
+      "got_urgency": "medium",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 19,
+      "expected_category": "feature_request",
+      "expected_urgency": "low",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 20,
+      "expected_category": "feature_request",
+      "expected_urgency": "medium",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 21,
+      "expected_category": "other",
+      "expected_urgency": "low",
+      "got_category": "other",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 22,
+      "expected_category": "other",
+      "expected_urgency": "medium",
+      "got_category": "feature_request",
+      "got_urgency": "high",
+      "category_correct": false,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 23,
+      "expected_category": "other",
+      "expected_urgency": "low",
+      "got_category": "other",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 24,
+      "expected_category": "other",
+      "expected_urgency": "high",
+      "got_category": "other",
+      "got_urgency": "critical",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 25,
+      "expected_category": "other",
+      "expected_urgency": "low",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": false,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 26,
+      "expected_category": "billing",
+      "expected_urgency": "medium",
+      "got_category": "billing",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 27,
+      "expected_category": "technical",
+      "expected_urgency": "high",
+      "got_category": "technical",
+      "got_urgency": "high",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 28,
+      "expected_category": "account",
+      "expected_urgency": "medium",
+      "got_category": "account",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": false,
+      "urgency_within_one": true
+    },
+    {
+      "id": 29,
+      "expected_category": "feature_request",
+      "expected_urgency": "low",
+      "got_category": "feature_request",
+      "got_urgency": "low",
+      "category_correct": true,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    },
+    {
+      "id": 30,
+      "expected_category": "other",
+      "expected_urgency": "low",
+      "got_category": "technical",
+      "got_urgency": "low",
+      "category_correct": false,
+      "urgency_correct": true,
+      "urgency_within_one": true
+    }
+  ]
+}

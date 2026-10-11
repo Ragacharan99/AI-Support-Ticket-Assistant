@@ -2,6 +2,7 @@
 
 import json
 import re
+import time
 from typing import Literal
 
 from openai import APIConnectionError, APIError, APITimeoutError, OpenAI
@@ -32,6 +33,13 @@ Fields:
   "summary": "one or two sentence summary",
   "suggested_reply": "customer-facing reply"
 }}
+
+Category guide:
+- billing: charges, invoices, refunds, renewals
+- technical: bugs, errors, performance, integrations
+- account: login, access, team members, profile changes, deletion
+- feature_request: asks for new functionality
+- other: partnerships, press, thanks, general questions
 
 Urgency guide:
 - critical: outage, security issue, or data loss
@@ -72,22 +80,30 @@ def _request_analysis(subject: str, body: str) -> str:
         raise AnalysisError("AI analysis is unavailable: NVIDIA_MODEL is not configured")
 
     client = OpenAI(api_key=API_KEY, base_url=NVIDIA_BASE_URL, timeout=30, max_retries=0)
-    try:
-        completion = client.chat.completions.create(
-            model=NVIDIA_MODEL,
-            messages=[
-    {"role": "system", "content": SYSTEM_PROMPT},
-    {"role": "user", "content": USER_PROMPT.format(subject=subject, body=body)},
-],
-            max_tokens=2000,
-        )
-        content = completion.choices[0].message.content if completion.choices else None
-    except (APITimeoutError, APIConnectionError, APIError) as exc:
-        raise AnalysisError(f"AI provider request failed: {exc}") from exc
+    for attempt in range(2):
+        try:
+            completion = client.chat.completions.create(
+                model=NVIDIA_MODEL,
+                messages=[
+                    {"role": "system", "content": SYSTEM_PROMPT},
+                    {"role": "user", "content": USER_PROMPT.format(subject=subject, body=body)},
+                ],
+                max_tokens=2000,
+            )
+            content = completion.choices[0].message.content if completion.choices else None
+        except (APITimeoutError, APIConnectionError) as exc:
+            if attempt == 0:
+                time.sleep(1)
+                continue
+            raise AnalysisError(f"AI provider request failed after a retry: {exc}") from exc
+        except APIError as exc:
+            raise AnalysisError(f"AI provider request failed: {exc}") from exc
 
-    if not content or not content.strip():
-        raise AnalysisError("AI provider returned an empty response; the model may have run out of tokens")
-    return content
+        if not content or not content.strip():
+            raise AnalysisError("AI provider returned an empty response; the model may have run out of tokens")
+        return content
+
+    raise AnalysisError("AI provider request failed after a retry")
 
 
 def analyze_ticket(subject: str, body: str) -> AnalysisResult:

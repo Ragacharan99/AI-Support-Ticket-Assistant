@@ -23,6 +23,12 @@ class Urgency(str, Enum):
     critical = "critical"
 
 
+class ReviewAction(str, Enum):
+    approved = "approved"
+    edited = "edited"
+    rejected = "rejected"
+
+
 class Ticket(Base):
     """A customer support ticket and its AI/review metadata."""
 
@@ -37,8 +43,13 @@ class Ticket(Base):
     )
     category: Mapped[str | None] = mapped_column(String(100), nullable=True)
     urgency: Mapped[Urgency | None] = mapped_column(SqlEnum(Urgency), nullable=True)
+    ai_category: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    ai_urgency: Mapped[Urgency | None] = mapped_column(SqlEnum(Urgency), nullable=True)
     ai_summary: Mapped[str | None] = mapped_column(Text, nullable=True)
     ai_suggested_reply: Mapped[str | None] = mapped_column(Text, nullable=True)
+    analyzed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
     final_reply: Mapped[str | None] = mapped_column(Text, nullable=True)
     reviewed_by: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    reviewed_at: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
+    review_action: Mapped[ReviewAction | None] = mapped_column(SqlEnum(ReviewAction), nullable=True)
 
