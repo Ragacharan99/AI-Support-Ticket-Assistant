@@ -1,9 +1,11 @@
 """FastAPI application and ticket endpoints."""
 
 from datetime import datetime
+from pathlib import Path
 from statistics import median
 
 from fastapi import Depends, FastAPI, HTTPException, Query, status
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import case, select
 from sqlalchemy.orm import Session
 
@@ -191,3 +193,7 @@ def review_ticket(ticket_id: int, review: TicketReview, db: Session = Depends(ge
     db.commit()
     db.refresh(ticket)
     return ticket
+
+
+# Mount last so API routes keep precedence over the single-page application.
+app.mount("/", StaticFiles(directory=Path(__file__).parent / "static", html=True), name="static")

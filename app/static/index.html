@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ticket Assistant</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">SUPPORT OPERATIONS</p>
+        <h1>Ticket Assistant</h1>
+      </div>
+      <div class="metrics" aria-label="Review metrics">
+        <div><span>Acceptance rate</span><strong id="acceptance-rate">—</strong></div>
+        <div><span>Avg. review time</span><strong id="average-review-time">—</strong></div>
+        <div><span>Tickets waiting</span><strong id="tickets-waiting">—</strong></div>
+      </div>
+    </header>
+
+    <main>
+      <section id="error-banner" class="error-banner" hidden role="alert">
+        <span id="error-message"></span>
+        <button id="retry-button" class="button secondary" type="button" hidden>Retry</button>
+        <button id="dismiss-error" class="icon-button" type="button" aria-label="Dismiss error">×</button>
+      </section>
+
+      <section class="workspace">
+        <aside class="queue-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">REVIEW QUEUE</p><h2>Needs attention</h2></div>
+            <span id="queue-count" class="count">0</span>
+          </div>
+          <div id="queue-list" class="queue-list" aria-live="polite"></div>
+        </aside>
+
+        <section class="review-panel" aria-live="polite">
+          <div id="empty-review" class="empty-state">
+            <h2>Queue is clear</h2>
+            <p>Select an analyzed ticket from the queue, or create a new one below.</p>
+          </div>
+          <div id="ticket-review" hidden>
+            <div class="ticket-heading">
+              <div><p class="eyebrow">CUSTOMER TICKET</p><h2 id="ticket-subject"></h2></div>
+              <span id="ticket-urgency" class="badge"></span>
+            </div>
+            <div class="message-card"><h3>Customer message</h3><p id="ticket-body"></p></div>
+            <div class="message-card"><h3>AI summary</h3><p id="ticket-summary"></p></div>
+            <div class="form-grid">
+              <label>Category<select id="category-select"><option value="billing">Billing</option><option value="technical">Technical</option><option value="account">Account</option><option value="feature_request">Feature request</option><option value="other">Other</option></select></label>
+              <label>Urgency<select id="urgency-select"><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option></select></label>
+              <label class="wide">Reviewer name<input id="reviewer-input" type="text" maxlength="100" placeholder="Your name" autocomplete="name"></label>
+              <label class="wide">Suggested reply<textarea id="reply-input" rows="7"></textarea></label>
+            </div>
+            <div class="actions">
+              <button id="approve-button" class="button approve" type="button">Approve</button>
+              <button id="edited-button" class="button primary" type="button">Send edited</button>
+              <button id="reject-button" class="button reject" type="button">Reject</button>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <section class="new-ticket-card">
+        <div><p class="eyebrow">NEW TICKET</p><h2>Create and analyze</h2></div>
+        <form id="new-ticket-form">
+          <label>Subject<input id="new-subject" required maxlength="255" placeholder="What needs help?"></label>
+          <label>Customer message<textarea id="new-body" required rows="4" placeholder="Describe the issue"></textarea></label>
+          <button id="analyze-button" class="button primary" type="submit">Create &amp; analyze</button>
+          <span id="new-ticket-status" class="form-status" aria-live="polite"></span>
+        </form>
+      </section>
+    </main>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
